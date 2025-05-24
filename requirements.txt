@@ -1,0 +1,4 @@
+flask
+stytch
+python-dotenv             # optional in prod but harmless
+gunicorn                  # Render runs this instead of `flask run`
