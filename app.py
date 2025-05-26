@@ -2,6 +2,7 @@ import os
 from flask import Flask, render_template, request, redirect, session, flash, url_for
 from dotenv import load_dotenv
 from stytch import Client
+from stych.error import StychError
 
 load_dotenv()
 print("FLASK_SECRET", os.getenv("FLASK_SECRET"))
@@ -16,6 +17,16 @@ stytch = Client(
 )
 
 REDIRECT_URL = os.getenv("REDIRECT_URL")
+
+try:
+    stytch.magic_links.email.login_or_create(
+        email=email,
+        login_magic_link_url=REDIRECT_URL,
+        signup_magic_link_url=REDIRECT_URL,
+    )
+except StytchError as e:
+    print("Stytch 400 →", e.error_type, "–", e.error_message, flush=True)
+    raise
 
 # ------------- helpers -------------
 def logged_in():
